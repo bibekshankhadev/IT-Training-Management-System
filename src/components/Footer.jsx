@@ -12,9 +12,10 @@ import { NavLink } from "react-router-dom";
 
 function Footer() {
   return (
+    <>
     <div className="flex flex-col bg-[#020617] text-gray-300 pt-10 px-4">
-      <div className="flex justify-around pb-4">
-        <div className="w-[30%] flex flex-col gap-y-3">
+      <div className="flex flex-col md:flex-row justify-around pb-4">
+        <div className="w-full md:w-[30%] flex flex-col gap-y-3">
           <div className="flex flex-col gap-y-3">
             <h1 className="text-lg font-bold">Sipalaya Info Tech</h1>
             <p>
@@ -34,7 +35,7 @@ function Footer() {
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-y-3">
+        <div className="hidden md:flex flex-col gap-y-3">
           <h1 className="font-bold text-lg">Quick Links</h1>
           <ul className="flex flex-col gap-y-2">
             <li>
@@ -54,7 +55,7 @@ function Footer() {
             </li>
           </ul>
         </div>
-        <div className="flex flex-col gap-y-3">
+        <div className="flex flex-col pt-7 md:pt-0 md:gap-y-3">
           <h1 className="font-bold font-lg">Contact Us</h1>
           <div className="flex gap-x-3 items-center">
             <MdOutlineLocationOn className="text-blue-600 text-xl" />
@@ -71,9 +72,30 @@ function Footer() {
         </div>
       </div>
       <div className="py-4 border-t border-t-gray-400 mt-2 text-center font-light">
-        <h1>© 2024 Sipalaya Info Tech Pvt. Ltd. All rights reserved.</h1>
+        <h1 className="text-md ">© 2024 Sipalaya Info Tech Pvt. Ltd. All rights reserved.</h1>
       </div>
+      
     </div>
+    <div className="bg-white flex shadow-sm shadow-gray-400 justify-around p-2 w-full fixed bottom-0 md:hidden">
+          <div className="flex flex-col justify-center items-center">
+            <FaHome className="text-2xl text-gray-500"/>
+            <p className="text-xs text-gray-500">Home</p>
+          </div>
+          <div className="flex flex-col justify-center items-center">
+            <FaBookOpen className="text-2xl text-gray-500"/>
+            <p className="text-xs text-gray-500">Courses</p>
+          </div>
+          <div className="flex flex-col justify-center items-center">
+            <TiUserAddOutline className="text-2xl text-gray-500"/>
+            <p className="text-xs text-gray-500">Admission</p>
+          </div>
+          <div className="flex flex-col justify-center items-center">
+            <FaRegUserCircle className="text-2xl text-gray-500"/>
+            <p className="text-xs text-gray-500">Profile</p>
+          </div>
+      </div>
+    </>
+    
   );
 }
 

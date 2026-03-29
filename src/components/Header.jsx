@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { IoMdMenu } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 
 function Header() {
     const [showMenu, setShowMenu] = useState(false);
+    const navigate = useNavigate()
   return (
-    <div className="flex justify-between p-5 shadow-sm shadow-gray-300">
+    <div className="sticky top-0 z-50 flex justify-between p-5 bg-white shadow-sm shadow-gray-300 ">
       <div >
-        <h1 className="font-bold text-[18px]">Sipalaya Info Tech</h1>
+        <h1 className="font-bold text-[18px] text-blue-900">Sipalaya Info Tech</h1>
       </div>
       <div className="hidden md:block md:space-x-6">
         <NavLink className="hover:text-blue-600" to="/">Home</NavLink>
@@ -17,8 +18,8 @@ function Header() {
         <NavLink className="hover:text-blue-600" to="/about">About Us</NavLink>
       </div>
       <div className="hidden md:block md:space-x-3">
-        <button className="bg-blue-600 text-white p-1 px-7 rounded-4xl hover:bg-blue-500">Register</button>
-        <button className="bg-blue-600 text-white p-1 px-7 rounded-4xl hover:bg-blue-500">Login</button>
+        <button className="bg-blue-600 text-white p-1 px-7 rounded-4xl hover:bg-blue-500" onClick={()=>{navigate("/register")}}>Register</button>
+        <button className="bg-blue-600 text-white p-1 px-7 rounded-4xl hover:bg-blue-500" onClick={()=>{navigate("/login")}}>Login</button>
       </div>
       <button className=" md:hidden" onClick={()=>{
         setShowMenu(!showMenu)

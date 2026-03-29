@@ -1,11 +1,250 @@
-import React from 'react'
+import React from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { MdArrowOutward } from "react-icons/md";
+import { IoSearch } from "react-icons/io5";
+import { FaAngleDown } from "react-icons/fa6";
+import { RiVerifiedBadgeFill } from "react-icons/ri";
+import { FaArrowRight } from "react-icons/fa6";
 
 function Home() {
   return (
-    <div>
-      Home
+    <div className="bg-[#F4F2FF]">
+      {/* Banner */}
+      <div className="first-banner bg-[#F4F2FF] py-22 px-15 flex gap-x-20 items-center">
+        <FaChevronLeft />
+        <div className="side-text w-[50%] space-y-6">
+          <button className="bg-[#E2DFFF] text-center text-[10px] px-5 py-0.5 rounded-3xl font-semibold text-[#3d3867]">
+            FEATURED PROGRAMS
+          </button>
+          <div>
+            <h1 className="font-bold text-[60px]  bg-linear-to-r from-blue-800 to-blue-600 bg-clip-text text-transparent">
+              Master Web & Graphics
+            </h1>
+          </div>
+          <div>
+            <p className="text-gray-500">
+              Dive deep into Web Development and Professional Graphic Design
+              with industry experts. Transform your creativity into a
+              high-paying tech career.
+            </p>
+          </div>
+          <div className="buttons flex gap-x-5">
+            <button className="bg-blue-700 text-white px-6 py-2 rounded-xl">
+              Enroll Now
+            </button>
+            <button className="border-2 border-gray-500 px-6 py-2 rounded-xl">
+              View Courses
+            </button>
+            <button className="text-blue-800 font-bold flex items-center gap-x-0.5">
+              Schedule Demo <MdArrowOutward />
+            </button>
+          </div>
+        </div>
+        <div className="side-image px-20 ">
+          <div className="image-wrapper w-100 h-120 overflow-hidden rounded-2xl shadow-md shadow-gray-400">
+            <img
+              className="w-full h-full object-cover"
+              src="https://images.pexels.com/photos/414974/pexels-photo-414974.jpeg?cs=srgb&dl=pexels-pixabay-414974.jpg&fm=jpg"
+              alt=""
+            />
+          </div>
+        </div>
+        <FaChevronRight />
+      </div>
+
+      {/* Search Bar */}
+      <div className="flex bg-white p-3 shadow-sm shadow-gray-400 rounded-2xl mx-10 justify-around mb-4 py-4">
+        <div className="bg-[#F4F2FF] w-[65%] rounded-2xl text-gray-600 flex items-center p-3 gap-x-3">
+          <IoSearch className="text-2xl" />
+          <input
+            type="text"
+            placeholder="Search Courses...."
+            className="w-full h-full border-0 bg-transparent outline-none text-sm"
+          />
+        </div>
+        <button className="flex items-center bg-[#F4F2FF] text-gray-600 px-5 rounded-2xl gap-x-2">
+          Category <FaAngleDown />
+        </button>
+        <button className="flex items-center bg-[#F4F2FF] text-gray-600 px-5 rounded-2xl gap-x-2">
+          Skill Level <FaAngleDown />
+        </button>
+        <button className="bg-blue-800 text-white rounded-2xl px-6">
+          Search
+        </button>
+      </div>
+
+      {/* Details Institute */}
+      <div className="flex flex-col bg-white p-10">
+        <div className="firstbanner flex gap-x-5 ">
+          <div className="bg-[#F4F2FF] flex p-10 rounded-2xl shadow-sm shadow-gray-400">
+            <div className="space-y-3">
+              <h1 className="text-[30px] font-bold">
+                Our Impact on Technical Education
+              </h1>
+              <p className="text-gray-500">
+                We don't just teach code; we build careers. Our success metrics
+                reflect our commitment to excellence in the Nepalese IT
+                landscape.
+              </p>
+              <div className="flex justify-between">
+                <div className="space-y-2">
+                  <h1 className="font-bold text-4xl text-blue-700">5,000+</h1>
+                  <p className="font-semibold text-md text-[#434654]">
+                    STUDENTS PLACED
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <h1 className="font-bold text-4xl text-blue-700">90%</h1>
+                  <p className="font-semibold text-md text-[#434654]">
+                    HIRING RATE
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="w-[50%]"></div>
+          </div>
+          <div className="bg-blue-800 text-white rounded-2xl p-10 space-y-3">
+            <RiVerifiedBadgeFill className="text-2xl" />
+            <h1 className="text-[30px] font-bold">Certification Preparation</h1>
+            <p className="text-gray-300">
+              Our curriculum is mapped to global vendor certifications from
+              Microsoft, AWS, and Adobe.
+            </p>
+            <button className="flex items-center gap-1">
+              Learn More <MdArrowOutward />
+            </button>
+          </div>
+        </div>
+        <div className="secondbanner flex justify-center-safe gap-x-5 m-7">
+          <div className="bg-[#E7E6FF] p-8 rounded-2xl">
+            <h1 className="text-2xl font-bold text-blue-700">
+              Real-World Projects
+            </h1>
+            <p className="text-sm text-gray-500">
+              Work on live projects from our agency partners during your
+              training period.
+            </p>
+          </div>
+          <div className="bg-[#C5C4FF] p-8 rounded-2xl text-center">
+            <h1 className="text-3xl font-bold text-[#4F4F82]">30+</h1>
+            <p className="text-sm text-gray-500">Partner Tech Hubs</p>
+          </div>
+          <div className="bg-[#E7E6FF] p-8 rounded-2xl">
+            <h1 className="text-2xl font-bold text-blue-700">
+              Career Counseling
+            </h1>
+            <p className="text-sm text-gray-500">
+              Lifetime access to our placement cell and resume workshops.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Courses */}
+      <div className="courses space-y-3 p-10">
+        <div className="  flex justify-between">
+          <div className="">
+            <h1 className="text-3xl font-bold">Popular Courses</h1>
+            <p className=" text-gray-500 text-sm">
+              Choose from a variety of paths specifically designed for the
+              modern digital economy.
+            </p>
+          </div>
+          <div className="flex gap-x-4 justify-end items-end">
+            <button className="border border-gray-500 bg-transparent text-sm h-10 px-3 rounded-full">
+              <FaChevronLeft />
+            </button>
+            <button className="border border-gray-500 bg-transparent text-sm h-10 px-3 rounded-full">
+              <FaChevronRight />
+            </button>
+          </div>
+        </div>
+        <div className="flex  gap-6 p-10 justify-center ">
+          <div className="card bg-white rounded-2xl w-90">
+            <div className="">
+              <img
+                src="https://www.classcentral.com/report/wp-content/uploads/2022/09/Graphic-Design-BCG-Banner.png"
+                className="w-full object-cover overflow-hidden"
+                alt=""
+              />
+            </div>
+            <div className="p-8 space-y-3">
+              <h1 className="font-bold text-lg">Graphic Design</h1>
+              <p className="text-sm">
+                Learn Adobe Creative Cloud from scratch and build a visual
+                portfolio.
+              </p>
+            </div>
+            <div className="px-8 pb-5 flex justify-between">
+              <h1 className="font-bold text-md text-blue-800">Rs. 12,500</h1>
+              <button className="flex gap-1 items-center text-sm font-bold">
+                Enroll Now <FaArrowRight />
+              </button>
+            </div>
+          </div>
+          <div className="card bg-white rounded-2xl w-90">
+            <div className="">
+              <img
+                src="https://www.classcentral.com/report/wp-content/uploads/2022/09/Graphic-Design-BCG-Banner.png"
+                className="w-full object-cover overflow-hidden"
+                alt=""
+              />
+            </div>
+            <div className="p-8 space-y-3">
+              <h1 className="font-bold text-lg">Graphic Design</h1>
+              <p className="text-sm">
+                Learn Adobe Creative Cloud from scratch and build a visual
+                portfolio.
+              </p>
+            </div>
+            <div className="px-8 pb-5 flex justify-between">
+              <h1 className="font-bold text-md text-blue-800">Rs. 12,500</h1>
+              <button className="flex gap-1 items-center text-sm font-bold">
+                Enroll Now <FaArrowRight />
+              </button>
+            </div>
+          </div>
+          <div className="card bg-white rounded-2xl w-90">
+            <div className="">
+              <img
+                src="https://www.classcentral.com/report/wp-content/uploads/2022/09/Graphic-Design-BCG-Banner.png"
+                className="w-full object-cover overflow-hidden"
+                alt=""
+              />
+            </div>
+            <div className="p-8 space-y-3">
+              <h1 className="font-bold text-lg">Graphic Design</h1>
+              <p className="text-sm">
+                Learn Adobe Creative Cloud from scratch and build a visual
+                portfolio.
+              </p>
+            </div>
+            <div className="px-8 pb-5 flex justify-between">
+              <h1 className="font-bold text-md text-blue-800">Rs. 12,500</h1>
+              <button className="flex gap-1 items-center text-sm font-bold">
+                Enroll Now <FaArrowRight />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* lastPart */}
+      <div className="p-15 ">
+        <div className="bg-blue-800 text-white px-25 py-15 text-center space-y-3 rounded-3xl">
+          <h1 className="text-5xl font-bold">Ready To Start Your Tech Journey?</h1>
+          <p>
+            Join the thousands of students who have transformed their lives with
+            Sipalaya's expert IT training.
+          </p>
+          <div className="flex gap-x-8 justify-center p-5">
+            <button className="bg-white rounded-2xl px-7 text-blue-900 py-4">Enroll Today</button>
+            <button className="bg-transparent border-2 border-white px-10 py-4 rounded-2xl">Contact</button>
+          </div>
+        </div>
+      </div>
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;
