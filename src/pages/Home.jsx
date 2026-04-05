@@ -1,12 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { MdArrowOutward } from "react-icons/md";
 import { IoSearch } from "react-icons/io5";
 import { FaAngleDown } from "react-icons/fa6";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
 import { FaArrowRight } from "react-icons/fa6";
+import SearchBar from "../components/SearchBar";
 
 function Home() {
+  const navigate = useNavigate();
+  const [courses, setCourses] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const getCourse = async () => {
+    try {
+      setIsLoading(true);
+      let res = await fetch("http://localhost:9000/api/course/get-all-course", {
+        method: "GET",
+        credentials: "include",
+      });
+      setIsLoading(false);
+      if (res.ok) {
+        res = await res.json();
+        console.log(res);
+        setCourses(res.courses);
+        setIsError(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsError(true);
+    }
+  };
+  useEffect(() => {
+    getCourse();
+  }, []);
+
+  // pages for banner
+  const itemPerPage = 3;
+  const lastIndex = currentPage * itemPerPage;
+  const firstIndex = lastIndex - itemPerPage;
+
+  const currentCourses = courses.slice(firstIndex, lastIndex);
+  const totalPages = Math.ceil(courses.length / itemPerPage);
+
+  if (isLoading) {
+    return <p>Loading......</p>;
+  }
   return (
     <div className="bg-[#F4F2FF]">
       {/* Banner */}
@@ -53,25 +94,7 @@ function Home() {
       </div>
 
       {/* Search Bar */}
-      <div className="flex bg-white p-3 shadow-sm shadow-gray-400 rounded-2xl mx-10 justify-around mb-4 py-4">
-        <div className="bg-[#F4F2FF] w-[65%] rounded-2xl text-gray-600 flex items-center p-3 gap-x-3">
-          <IoSearch className="text-2xl" />
-          <input
-            type="text"
-            placeholder="Search Courses...."
-            className="w-full h-full border-0 bg-transparent outline-none text-sm"
-          />
-        </div>
-        <button className="flex items-center bg-[#F4F2FF] text-gray-600 px-5 rounded-2xl gap-x-2">
-          Category <FaAngleDown />
-        </button>
-        <button className="flex items-center bg-[#F4F2FF] text-gray-600 px-5 rounded-2xl gap-x-2">
-          Skill Level <FaAngleDown />
-        </button>
-        <button className="bg-blue-800 text-white rounded-2xl px-6">
-          Search
-        </button>
-      </div>
+      <SearchBar />
 
       {/* Details Institute */}
       <div className="flex flex-col bg-white p-10">
@@ -151,95 +174,93 @@ function Home() {
             </p>
           </div>
           <div className="flex gap-x-4 justify-end items-end">
-            <button className="border border-gray-500 bg-transparent text-sm h-10 px-3 rounded-full">
+            <button
+              className="border border-gray-500 bg-transparent text-sm h-10 px-3 rounded-full"
+              onClick={() => {
+                setCurrentPage(currentPage - 1);
+                if(currentPage <= 1){
+                  setCurrentPage(totalPages)
+                }
+              }}
+            >
               <FaChevronLeft />
             </button>
-            <button className="border border-gray-500 bg-transparent text-sm h-10 px-3 rounded-full">
+            <button
+              className="border border-gray-500 bg-transparent text-sm h-10 px-3 rounded-full"
+              onClick={() => {
+                setCurrentPage(currentPage + 1);
+                if (currentPage >= totalPages) {
+                  setCurrentPage(1);
+                }
+              }}
+            >
               <FaChevronRight />
             </button>
           </div>
         </div>
-        <div className="flex  gap-6 p-10 justify-center ">
-          <div className="card bg-white rounded-2xl w-90">
-            <div className="">
-              <img
-                src="https://www.classcentral.com/report/wp-content/uploads/2022/09/Graphic-Design-BCG-Banner.png"
-                className="w-full object-cover overflow-hidden"
-                alt=""
-              />
-            </div>
-            <div className="p-8 space-y-3">
-              <h1 className="font-bold text-lg">Graphic Design</h1>
-              <p className="text-sm">
-                Learn Adobe Creative Cloud from scratch and build a visual
-                portfolio.
-              </p>
-            </div>
-            <div className="px-8 pb-5 flex justify-between">
-              <h1 className="font-bold text-md text-blue-800">Rs. 12,500</h1>
-              <button className="flex gap-1 items-center text-sm font-bold">
-                Enroll Now <FaArrowRight />
-              </button>
-            </div>
+
+        {!isError && !isLoading && courses.length > 0 ? (
+          <div className="flex  gap-6 p-10 justify-center ">
+            {currentCourses.map((item) => {
+              return (
+                <div className="card bg-white rounded-2xl w-90" key={item._id}>
+                  <div className="">
+                    <img
+                      src={`http://localhost:9000/image/${item.courseImage}`}
+                      className="w-full object-cover h-50 rounded-t-2xl"
+                      alt=""
+                    />
+                  </div>
+                  <div className="p-8 space-y-3">
+                    <h1 className="font-bold text-lg">{item.title}</h1>
+                    <p className="text-sm">
+                      {item.description.length > 65
+                        ? item.description.slice(0, 65) + "...."
+                        : item.description}
+                    </p>
+                  </div>
+                  <div className="px-8 pb-5 flex justify-between">
+                    <h1 className="font-bold text-md text-blue-800">
+                      Rs. {item.fee}
+                    </h1>
+                    <button
+                      className="flex gap-1 items-center text-sm font-bold"
+                      onClick={() => {
+                        navigate("/enroll", {state:item});
+                      }}
+                    >
+                      Enroll Now <FaArrowRight />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-          <div className="card bg-white rounded-2xl w-90">
-            <div className="">
-              <img
-                src="https://www.classcentral.com/report/wp-content/uploads/2022/09/Graphic-Design-BCG-Banner.png"
-                className="w-full object-cover overflow-hidden"
-                alt=""
-              />
-            </div>
-            <div className="p-8 space-y-3">
-              <h1 className="font-bold text-lg">Graphic Design</h1>
-              <p className="text-sm">
-                Learn Adobe Creative Cloud from scratch and build a visual
-                portfolio.
-              </p>
-            </div>
-            <div className="px-8 pb-5 flex justify-between">
-              <h1 className="font-bold text-md text-blue-800">Rs. 12,500</h1>
-              <button className="flex gap-1 items-center text-sm font-bold">
-                Enroll Now <FaArrowRight />
-              </button>
-            </div>
+        ) : (
+          <div>
+            <h1>No Courses Availabel</h1>
           </div>
-          <div className="card bg-white rounded-2xl w-90">
-            <div className="">
-              <img
-                src="https://www.classcentral.com/report/wp-content/uploads/2022/09/Graphic-Design-BCG-Banner.png"
-                className="w-full object-cover overflow-hidden"
-                alt=""
-              />
-            </div>
-            <div className="p-8 space-y-3">
-              <h1 className="font-bold text-lg">Graphic Design</h1>
-              <p className="text-sm">
-                Learn Adobe Creative Cloud from scratch and build a visual
-                portfolio.
-              </p>
-            </div>
-            <div className="px-8 pb-5 flex justify-between">
-              <h1 className="font-bold text-md text-blue-800">Rs. 12,500</h1>
-              <button className="flex gap-1 items-center text-sm font-bold">
-                Enroll Now <FaArrowRight />
-              </button>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
+      
 
       {/* lastPart */}
       <div className="p-15 ">
         <div className="bg-blue-800 text-white px-25 py-15 text-center space-y-3 rounded-3xl">
-          <h1 className="text-5xl font-bold">Ready To Start Your Tech Journey?</h1>
+          <h1 className="text-5xl font-bold">
+            Ready To Start Your Tech Journey?
+          </h1>
           <p>
             Join the thousands of students who have transformed their lives with
             Sipalaya's expert IT training.
           </p>
           <div className="flex gap-x-8 justify-center p-5">
-            <button className="bg-white rounded-2xl px-7 text-blue-900 py-4">Enroll Today</button>
-            <button className="bg-transparent border-2 border-white px-10 py-4 rounded-2xl">Contact</button>
+            <button className="bg-white rounded-2xl px-7 text-blue-900 py-4">
+              Enroll Today
+            </button>
+            <button className="bg-transparent border-2 border-white px-10 py-4 rounded-2xl">
+              Contact
+            </button>
           </div>
         </div>
       </div>

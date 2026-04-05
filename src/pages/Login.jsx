@@ -1,12 +1,63 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { MdLogin } from "react-icons/md";
 import { FaRegEnvelope } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthProvider";
 
-function Login() {
+function Login() { 
+  const navigate = useNavigate();
+  const {setUser} = useContext(AuthContext)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [emailError, setEmailError] = useState("")
+  const [passwordError, setPasswordError] = useState("")
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleLogin = async(e)=>{
+    e.preventDefault();
+    if(email.length<=0){
+      setEmailError("Email should not be empty")
+      return
+    }
+    if(password.length<=0 || password.length<8){
+      setPasswordError("Password should not be less than 8 characters or empty.")
+      return
+    }
+
+    try {
+      let res = await fetch("http://localhost:9000/api/user/login",{
+        method: "POST",
+        credentials: "include",
+        headers :{
+          "Content-Type": "Application/json"
+        },
+        body:JSON.stringify({email, password})
+      })
+      if(res.ok){
+        res = await res.json();
+        console.log(res);
+        
+        setUser(res.user)
+        navigate('/')
+        alert(res.message)
+      }else{
+        res = await res.json()
+        alert(res.message)
+      }
+
+
+
+    } catch (error) {
+      console.log(error);
+      
+    }
+
+    console.log(email, password);
+    
+  }
   return (
     <div className="p-20 px-85">
       <div className="card flex bg-[#F4F2FF] justify-between rounded-2xl shadow-md shadow-gray-400 ">
@@ -17,7 +68,7 @@ function Login() {
               Secure access to your learning dashboard.
             </p>
           </div>
-          <form action="">
+          <form onSubmit={(e)=>{handleLogin(e)}}>
             <div className="flex flex-col gap-1 pt-4">
               <label htmlFor="email" className="text-[#181A2D]">
                 {" "}
@@ -30,8 +81,16 @@ function Login() {
                   id="email"
                   placeholder="Your Email....."
                   className="bg-transparent outline-none"
+                  onChange={(e)=>{setEmail(e.target.value)
+                    setEmailError("")
+                  }}
                 />
               </div>
+              {
+                emailError.length>0 && (
+                  <p className="text-red-600 text-[13px]">*{emailError}</p>
+                )
+              }
             </div>
             <div className="flex flex-col gap-1 pt-4">
               <label htmlFor="email"> Password</label>
@@ -39,16 +98,29 @@ function Login() {
                 <div className="flex w-[90%] items-center gap-3">
                   <FaLock />
                 <input
-                  type="password"
+                  type={showPassword? "text":"password"}
                   id="email"
                   placeholder="Your Password....."
                   className="bg-transparent outline-none"
+                  onChange={(e)=>{
+                    setPassword(e.target.value)
+                  setPasswordError("")
+                  }}
                 />
                 </div>
-                <div>
-                  <FaRegEye />
+                <div onClick={()=>{
+                  setShowPassword(!showPassword);
+                }}>
+                 { 
+                  showPassword? <FaRegEyeSlash/>:<FaRegEye />
+                  }
                 </div>
               </div>
+              {
+                passwordError.length>0 && (
+                  <p className="text-red-600 text-[13px]">*{passwordError}</p>
+                )
+              }
             </div>
             <div className="flex justify-between pt-5 ">
               <div className="flex gap-1 items-center">

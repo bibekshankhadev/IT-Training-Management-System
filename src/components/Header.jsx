@@ -14,8 +14,9 @@ function Header() {
       <div className="hidden md:block md:space-x-6">
         <NavLink className="hover:text-blue-600" to="/">Home</NavLink>
         <NavLink className="hover:text-blue-600" to="/courses">Courses</NavLink>
-        <NavLink className="hover:text-blue-600" to="/services">Services</NavLink>
-        <NavLink className="hover:text-blue-600" to="/about">About Us</NavLink>
+        <NavLink className="hover:text-blue-600" to="/enroll">Enroll</NavLink>
+        <NavLink className="hover:text-blue-600" to="/aboutUs">About Us</NavLink>
+        <NavLink className="hover:text-blue-600" to="/contactUs">Contact Us</NavLink>
       </div>
       <div className="hidden md:block md:space-x-3">
         <button className="bg-blue-600 text-white p-1 px-7 rounded-4xl hover:bg-blue-500" onClick={()=>{navigate("/register")}}>Register</button>
@@ -40,7 +41,8 @@ function Header() {
             <li><NavLink to="/">Home</NavLink></li>
             <li><NavLink to="/courses">Courses</NavLink></li>
             <li><NavLink to="/services">Services</NavLink></li>
-            <li><NavLink to="/about">About Us</NavLink></li>
+            <li><NavLink to="/aboutUs">About Us</NavLink></li>
+            <li><NavLink to="/contactUs">Contact us</NavLink></li>
             <li className="bg-blue-700 text-white p-3  w-full text-center rounded-4xl">Register</li>
             <li className="bg-white border border-gray-400 p-3  w-full text-center rounded-4xl">Login</li>
         </ul>

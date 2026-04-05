@@ -1,28 +1,40 @@
 import React, { useState } from "react";
 import { MdLogin } from "react-icons/md";
 import { FaRegEnvelope, FaLock, FaRegEye, FaUser } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { IoIosCloudUpload } from "react-icons/io";
 import { FaPhone } from "react-icons/fa6";
 
+import { FaRegEyeSlash } from "react-icons/fa";
+
 function Register() {
   const [name, setName] = useState("");
+  const [address, setAddress] = useState("")
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [image, setImage] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [nameError, setNameError] = useState("");
+  const [addressError, setAddressError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [imageError, setImageError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleRegister = (e) => {
+  const navigate = useNavigate()
+  const handleRegister = async(e) => {
     e.preventDefault();
-    
 
     if (name.length <= 0) {
       setNameError("Name should not be empty.");
+      return;
+    }
+    if (address.length <= 0) {
+      setAddressError("Address should not be empty.");
       return;
     }
     if (email.length <= 0) {
@@ -35,11 +47,44 @@ function Register() {
       );
       return;
     }
-    if (password.length <= 0 || password < 8) {
+    if (password.length <= 0 || password.length < 8) {
       setPasswordError(
         "Password should not be empty or less than 8 characters.",
       );
       return;
+    }
+    if (image.length <= 0) {
+      setImageError("Choose profile image first.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setConfirmPasswordError("Password does not matched.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("fullName",name)
+    formData.append("address", address)
+    formData.append("email", email)
+    formData.append("password", password)
+    formData.append("phone", phone)
+    formData.append("image", image)
+
+    try {
+      let res = await fetch("http://localhost:9000/api/user/register",{
+        method: "POST",
+        body:formData
+      })
+      console.log(res);
+      
+      if(res.ok){
+        res = await res.json();
+        navigate("/login");
+        alert(res.message);
+      }
+    } catch (error) {
+      console.log(error);
+      
     }
     console.log(name, email, phone, password, image);
   };
@@ -85,7 +130,7 @@ function Register() {
                 <input
                   type="text"
                   id="name"
-                  placeholder="Your Name....."
+                  placeholder="Your Full Name....."
                   onChange={(e) => {
                     setName(e.target.value);
                     setNameError("");
@@ -97,6 +142,31 @@ function Register() {
                 <p className="text-red-600">*{nameError}</p>
               )}
             </div>
+            {/* Address */}
+              
+              <div className="flex flex-col gap-2">
+              <label htmlFor="address" className="text-[#181A2D] font-medium">
+                Address
+              </label>
+              <div className="w-full bg-[#C3C5D7] px-4 py-3 rounded-lg flex items-center gap-3">
+                <FaUser className="text-gray-600 text-lg shrink-0" />
+                <input
+                  type="text"
+                  id="address"
+                  placeholder="Your Full Address....."
+                  onChange={(e) => {
+                    setAddress(e.target.value);
+                    setAddressError("");
+                  }}
+                  className="w-full min-w-0 bg-transparent outline-none placeholder:text-gray-500"
+                />
+              </div>
+              {addressError.length > 0 && (
+                <p className="text-red-600">*{addressError}</p>
+              )}
+            </div>
+
+
 
             {/* Email + Phone */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -134,16 +204,14 @@ function Register() {
                     placeholder="Your phone number....."
                     onChange={(e) => {
                       setPhone(e.target.value);
-                      setPhoneError("")
+                      setPhoneError("");
                     }}
                     className="w-full min-w-0 bg-transparent outline-none placeholder:text-gray-500"
                   />
                 </div>
-                {
-                  phoneError.length>0 && (
-                    <p className="text-red-600">*{phoneError}</p>
-                  )
-                }
+                {phoneError.length > 0 && (
+                  <p className="text-red-600">*{phoneError}</p>
+                )}
               </div>
             </div>
 
@@ -157,23 +225,32 @@ function Register() {
                   <div className="flex items-center gap-3 flex-1 min-w-0">
                     <FaLock className="text-gray-600 shrink-0" />
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       id="password"
                       placeholder="Your Password....."
                       onChange={(e) => {
                         setPassword(e.target.value);
-                        setPasswordError("")
+                        setPasswordError("");
                       }}
+                      value={password}
                       className="w-full min-w-0 bg-transparent outline-none placeholder:text-gray-500"
                     />
                   </div>
-                  <FaRegEye className="text-gray-600 shrink-0 cursor-pointer" />
+                  <div
+                    onClick={() => {
+                      setShowPassword(!showPassword);
+                    }}
+                  >
+                    {showPassword ? (
+                      <FaRegEyeSlash className="text-gray-600 shrink-0 cursor-pointer" />
+                    ) : (
+                      <FaRegEye className="text-gray-600 shrink-0 cursor-pointer" />
+                    )}
+                  </div>
                 </div>
-                {
-                  passwordError.length>0 && (
-                    <p className="text-red-600">{passwordError}</p>
-                  )
-                }
+                {passwordError.length > 0 && (
+                  <p className="text-red-600">{passwordError}</p>
+                )}
               </div>
 
               <div className="flex flex-col gap-2 min-w-0">
@@ -184,15 +261,33 @@ function Register() {
                   <div className="flex items-center gap-3 flex-1 min-w-0">
                     <FaLock className="text-gray-600 shrink-0" />
                     <input
-                      type="password"
+                      type={showConfirmPassword ? "text" : "password"}
                       id="cpassword"
+                      value={confirmPassword}
                       placeholder="Confirm Password....."
                       className="w-full min-w-0 bg-transparent outline-none placeholder:text-gray-500"
+                      onChange={(e) => {
+                        setConfirmPassword(e.target.value);
+                        setConfirmPasswordError("");
+                      }}
                     />
                   </div>
-                  <FaRegEye className="text-gray-600 shrink-0 cursor-pointer" />
+                  <div
+                    onClick={() => {
+                      setShowConfirmPassword(!showConfirmPassword);
+                    }}
+                  >
+                    {showConfirmPassword ? (
+                      <FaRegEyeSlash className="text-gray-600 shrink-0 cursor-pointer" />
+                    ) : (
+                      <FaRegEye className="text-gray-600 shrink-0 cursor-pointer" />
+                    )}
+                  </div>
                 </div>
               </div>
+              {confirmPasswordError.length > 0 && (
+                <p className="text-red-600">*{confirmPasswordError}</p>
+              )}
             </div>
 
             {/* Upload Image */}
@@ -210,10 +305,14 @@ function Register() {
                   id="profilePic"
                   onChange={(e) => {
                     setImage(e.target.files[0]);
+                    setImageError("");
                   }}
                   className="w-full min-w-0 bg-transparent outline-none placeholder:text-gray-500"
                 />
               </div>
+              {imageError.length > 0 && (
+                <p className="text-red-600">*{imageError}</p>
+              )}
             </div>
 
             {/* Button */}
