@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   FaArrowRight,
   FaChevronLeft,
@@ -7,9 +7,11 @@ import {
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
+import { AuthContext } from "../context/AuthProvider";
 
 function Courses() {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const [courses, setCourses] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -38,7 +40,13 @@ function Courses() {
   }, []);
 
   if (isLoading) {
-    return <p>Loading......</p>;
+    return (
+      <div className="p-50">
+        <p className="text-center text-2xl font-bold text-blue-700">
+          Loading......
+        </p>
+      </div>
+    );
   }
   return (
     <div className="p-20 px-10 bg-[#efeffc]">
@@ -170,7 +178,11 @@ function Courses() {
                         <button
                           className="flex gap-1 items-center text-sm font-bold"
                           onClick={() => {
-                            navigate("/course-detail", { state: item });
+                            if (user) {
+                              navigate("coursesDetail", { state: item });
+                            } else {
+                              navigate("/courses-detail", { state: item });
+                            }
                           }}
                         >
                           View Details

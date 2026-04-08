@@ -14,7 +14,6 @@ function Header() {
       <div className="hidden md:block md:space-x-6">
         <NavLink className="hover:text-blue-600" to="/">Home</NavLink>
         <NavLink className="hover:text-blue-600" to="/courses">Courses</NavLink>
-        <NavLink className="hover:text-blue-600" to="/enroll">Enroll</NavLink>
         <NavLink className="hover:text-blue-600" to="/aboutUs">About Us</NavLink>
         <NavLink className="hover:text-blue-600" to="/contactUs">Contact Us</NavLink>
       </div>

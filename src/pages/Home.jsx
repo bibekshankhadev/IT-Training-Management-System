@@ -226,7 +226,7 @@ function Home() {
                     <button
                       className="flex gap-1 items-center text-sm font-bold"
                       onClick={() => {
-                        navigate("/enroll", {state:item});
+                        navigate("/login");
                       }}
                     >
                       Enroll Now <FaArrowRight />

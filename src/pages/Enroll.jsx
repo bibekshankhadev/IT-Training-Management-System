@@ -1,14 +1,42 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import khalti from "../assets/khalti.png";
 import esewa from "../assets/esewa.png";
+import { AuthContext } from "../context/AuthProvider";
 
 function Enroll() {
   const { state } = useLocation();
-  console.log(state);
+  const {user} = useContext(AuthContext);
+const [choosePayment, setChoosePayment]= useState("");
+ const navigate = useNavigate()
   let coursePrice = state?.fee
   let tax = coursePrice * (13/100);
   let totalAmount = coursePrice+tax
+
+  const createPayment=async()=>{
+    try {
+      let res = await fetch("http://localhost:9000/api/payment/create",{
+      method:"POST",
+      credentials:"include",
+      headers:{
+        "Content-Type":"Application/json"
+      },
+      body: JSON.stringify({
+        courseEnrolled: state._id,
+        totalAmount:totalAmount
+      })
+    })
+
+    if(res.ok){
+      res = await res.json();
+      console.log(res);
+      choosePayment === "esewa"? navigate("esewa",{state:res.paymentResponse}):navigate("khalti",{state:res.paymentResponse})
+    }
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
 
   return (
     <div className="bg-gray-200 p-20">
@@ -22,7 +50,7 @@ function Enroll() {
         </p>
       </div>
       <div className="forms-payment flex gap-x-5 items-center">
-        <form className="forms w-[60%] space-y-4 bg-blue-50 p-8 rounded-xl">
+        <div className="forms w-[60%] space-y-4 bg-blue-50 p-8 rounded-xl">
           <p className="text-gray-600 font-semibold text-md">Selected Course</p>
           <div className="selected-course flex gap-x-6 shadow-md shadow-gray-300 rounded-2xl border border-gray-500 p-3">
             <div className="image">
@@ -50,13 +78,15 @@ function Enroll() {
               <input
                 className="bg-gray-200 text-md text-gray-500 p-2 rounded-xl px-5"
                 type="text"
-                placeholder="Enter Your Name."
+                value={user.fullName}
+                disabled
               />
             </div>
             <div className="flex flex-col w-[47%] gap-y-2">
               <label
                 className="text-gray-600 font-semibold text-md"
                 htmlFor="email"
+
               >
                 Email
               </label>
@@ -64,7 +94,8 @@ function Enroll() {
                 id="email"
                 className="bg-gray-200 text-md text-gray-500 p-2 rounded-xl px-5"
                 type="email"
-                placeholder="Enter Your Email."
+                value={user.email}
+                disabled
               />
             </div>
           </div>
@@ -78,7 +109,8 @@ function Enroll() {
             <input
               className="bg-gray-200 text-md text-gray-500 p-2 rounded-xl px-5"
               type="number"
-              placeholder="Enter Your Phone Number"
+              value={user.phone}
+                disabled
             />
           </div>
           <div className="payment-method">
@@ -86,22 +118,30 @@ function Enroll() {
               Choose payment method
             </h1>
             <div className=" flex gap-x-4">
-              <div className="esewa bg-[#E7E6FF] p-4 flex flex-col justify-center items-center rounded-2xl" onClick={()=>{console.log("clicked");
+              <div className={`esewa p-4 flex flex-col justify-center items-center rounded-2xl ${choosePayment === "esewa" ? "bg-[#aba8fb]":"bg-[#E7E6FF]"} `}
+              onClick={()=>{
+                setChoosePayment("esewa")
               }}>
                 <img src={esewa} alt="" />
                 <label htmlFor="esewa">Esewa</label>
               </div>
-              <div className="khalti bg-[#E7E6FF] p-4 flex flex-col justify-center items-center rounded-2xl" onClick={()=>{console.log("clicked");
+              <div className={`khalti p-4 flex flex-col justify-center items-center rounded-2xl ${choosePayment === "khalti" ? "bg-[#aba8fb]":"bg-[#E7E6FF]"} `} 
+              onClick={()=>{
+                setChoosePayment("khalti")
               }}>
                 <img src={khalti} alt="" />
                 <p>Khalti</p>
               </div>
             </div>
           </div>
-          <button className="bg-blue-800 p-3 text-white rounded-2xl w-full shadow-lg hover:bg-blue-700 shadow-blue-400">
+          <button className="bg-blue-800 p-3 text-white rounded-2xl w-full shadow-lg hover:bg-blue-700 shadow-blue-400" 
+          onClick={()=>{
+            createPayment()
+          }}
+          >
             Complete Enrollment
           </button>
-        </form>
+        </div>
         <div className="courseSummary  w-[40%] p-8">
           <div className="card bg-blue-800 text-white py-10 px-14 rounded-2xl shadow-lg shadow-blue-300 space-y-3">
             <h1 className="text-2xl font-bold text-center">Course Summary</h1>

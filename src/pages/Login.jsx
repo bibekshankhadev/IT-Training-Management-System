@@ -41,7 +41,7 @@ function Login() {
         console.log(res);
         
         setUser(res.user)
-        navigate('/')
+        navigate('/student')
         alert(res.message)
       }else{
         res = await res.json()
